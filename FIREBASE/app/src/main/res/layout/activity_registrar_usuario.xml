@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E5E7EB"
+    tools:context=".RegistrarUsuarioActivity">
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scaleType="centerCrop"
+        app:srcCompat="@mipmap/vale"
+        tools:layout_editor_absoluteX="69dp"
+        tools:layout_editor_absoluteY="39dp"
+        tools:ignore="MissingConstraints" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="REGISTRO DE USUARIO"
+            android:textAlignment="center"
+            android:textColor="#050505"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
+        <!-- Campo CORREO con ícono -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="8dp">
+
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="Icono correo"
+                android:src="@mipmap/registrar_icon" />
+
+            <EditText
+                android:id="@+id/email"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:autofillHints="emailAddress"
+                android:background="#F2FFFFFF"
+                android:hint="Ingrese correo"
+                android:importantForAutofill="yes"
+                android:inputType="textEmailAddress"
+                android:minHeight="48dp"
+                android:textColor="#212121"
+                android:textColorHint="#888888" />
+        </LinearLayout>
+
+        <!-- Campo CONTRASEÑA con ícono -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="8dp">
+
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="Icono contraseña"
+                android:src="@mipmap/contrasena_icon" />
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:autofillHints="password"
+                android:background="#F5FFFFFF"
+                android:hint="Ingrese contraseña"
+                android:importantForAutofill="yes"
+                android:inputType="textPassword"
+                android:minHeight="48dp"
+                android:textColor="#212121"
+                android:textColorHint="#888888" />
+        </LinearLayout>
+
+        <!-- Botón REGISTRAR con ícono -->
+        <Button
+            android:id="@+id/btnRegistrar"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:backgroundTint="#1976D2"
+            android:drawableStart="@mipmap/registrar_icon"
+            android:drawablePadding="8dp"
+            android:onClick="registrar"
+            android:padding="10dp"
+            android:text="REGISTRAR"
+            android:textAllCaps="true"
+            android:textColor="#FFFFFF"
+            tools:ignore="OnClick" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

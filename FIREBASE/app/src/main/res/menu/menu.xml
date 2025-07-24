@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/ver_sms"
+        android:title="Ver SMS" />
+    <item
+        android:id="@+id/registrar"
+        android:title="Registrar" />
+    <item
+        android:id="@+id/cerrar_sesion"
+        android:title="Cerrar Sesion" />
+</menu>

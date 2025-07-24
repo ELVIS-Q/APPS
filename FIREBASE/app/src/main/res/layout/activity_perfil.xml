@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E5E7EB"
+    tools:context=".PerfilActivity">
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:scaleType="centerCrop"
+        app:srcCompat="@mipmap/sale"
+        tools:layout_editor_absoluteX="246dp"
+        tools:layout_editor_absoluteY="35dp" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="347dp"
+        android:layout_height="499dp"
+        android:layout_margin="32dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="REGISTRO DE FAMILIARES"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CÉDULA"
+            android:textColor="#000000" />
+
+        <EditText
+            android:id="@+id/cedula"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ingrese cédula"
+            android:inputType="number"
+            android:minHeight="48dp"
+            android:textColor="#000000"
+            android:textColorHint="#888888" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Nombre completo"
+            android:textColor="#000000" />
+
+        <EditText
+            android:id="@+id/nombres"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ingrese nombres"
+            android:inputType="textPersonName"
+            android:minHeight="48dp"
+            android:textColor="#000000"
+            android:textColorHint="#888888" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="N° CELULAR"
+            android:textColor="#000000" />
+
+        <EditText
+            android:id="@+id/celular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ingrese número celular"
+            android:inputType="phone"
+            android:minHeight="48dp"
+            android:textColor="#000000"
+            android:textColorHint="#888888" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="DIRECCIÓN"
+            android:textColor="#000000" />
+
+        <EditText
+            android:id="@+id/direccion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ingrese dirección"
+            android:inputType="textPostalAddress"
+            android:minHeight="48dp"
+            android:textColor="#000000"
+            android:textColorHint="#888888" />
+
+        <Button
+            android:id="@+id/btnregistrar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#1976D2"
+            android:text="REGISTRAR"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/btnRegresar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="#1976D2"
+            android:text="REGRESAR"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
