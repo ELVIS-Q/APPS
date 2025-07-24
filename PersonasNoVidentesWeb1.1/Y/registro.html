@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crear Cuenta</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="overlay">
+    <div class="login-container">
+      <img src="img/NuevosUsuarios.png" alt="SOS Icon" class="logo" />
+      <h1>Crear Cuenta</h1>
+
+      <label for="usuario">USUARIO</label>
+      <input type="email" id="usuario" placeholder="Ingrese correo electrónico" />
+
+      <label for="contrasena">CONTRASEÑA</label>
+      <input type="password" id="contrasena" placeholder="Ingrese contraseña" />
+
+      <p id="mensaje-error" style="color: red; display: none;"></p>
+      <p id="mensaje-exito" style="color: green; display: none;"></p>
+
+      <button class="btn" id="btnRegistrar">CREAR CUENTA</button>
+      <button class="btn btn-secundario" onclick="location.href='index.html'">VOLVER AL INICIO</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDfC4Wd6SdXe-ZW-_IPRCLFNePuIq2ngas",
+      authDomain: "personasnovidentes.firebaseapp.com",
+      projectId: "personasnovidentes",
+      storageBucket: "personasnovidentes.appspot.com",
+      messagingSenderId: "749650104159",
+      appId: "1:749650104159:web:dd99016f337a79df8430ea"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    document.getElementById('btnRegistrar').addEventListener('click', async () => {
+      const email = usuario.value.trim();
+      const password = contrasena.value.trim();
+      const errorMsg = document.getElementById("mensaje-error");
+      const successMsg = document.getElementById("mensaje-exito");
+
+      errorMsg.style.display = "none";
+      successMsg.style.display = "none";
+
+      if (!email || !password) {
+        errorMsg.textContent = "Todos los campos son obligatorios.";
+        errorMsg.style.display = "block";
+        return;
+      }
+
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        await setDoc(doc(db, "usuarios", user.uid), {
+          userId: user.uid,
+          email: user.email
+        });
+
+        successMsg.textContent = "Usuario creado correctamente.";
+        successMsg.style.display = "block";
+
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 2000);
+      } catch (error) {
+        errorMsg.textContent = error.code === "auth/email-already-in-use"
+          ? "El correo ya está registrado."
+          : "Error: " + error.message;
+        errorMsg.style.display = "block";
+      }
+    });
+  </script>
+</body>
+</html>

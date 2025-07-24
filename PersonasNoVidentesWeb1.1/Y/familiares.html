@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Datos Familiares</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .contenedor-principal {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+    .contenedor-general {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .recuadro {
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      width: 300px;
+      height: 370px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      overflow-y: auto;
+    }
+    .recuadro h2 {
+      margin-bottom: 10px;
+      color: #333;
+    }
+    .btn-cerrar-sesion {
+      width: 200px;
+      margin-top: 10px;
+    }
+    ul {
+      padding-left: 20px;
+      text-align: left;
+    }
+    li {
+      margin-bottom: 8px;
+      white-space: pre-line;
+      cursor: pointer;
+    }
+    .mensaje {
+      margin-top: 10px;
+      font-weight: bold;
+      display: none;
+    }
+    .mensaje.exito {
+      color: green;
+    }
+    .mensaje.error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <div class="contenedor-principal">
+    <div class="contenedor-general">
+
+      <!-- Formulario para agregar familiar -->
+      <div class="recuadro">
+        <h2>Datos de Familiares</h2>
+        <form id="form-familiares">
+          <label for="cedula">Cédula</label>
+          <input type="text" id="cedula" required />
+          <label for="nombre">Nombres Completos</label>
+          <input type="text" id="nombre" required />
+          <label for="direccion">Dirección</label>
+          <input type="text" id="direccion" required />
+          <label for="telefono">Teléfono</label>
+          <input type="tel" id="telefono" required />
+          <button type="submit" class="btn" id="btn-guardar">Guardar Familiar</button>
+          <p id="mensaje-exito" class="mensaje exito">Familiar guardado exitosamente.</p>
+          <p id="mensaje-error" class="mensaje error"></p>
+        </form>
+      </div>
+
+      <!-- Lista de familiares guardados -->
+      <div class="recuadro">
+        <h2>Familiares Registrados</h2>
+        <ul id="lista-familiares"></ul>
+      </div>
+
+      <!-- Registro de SMS -->
+      <div class="recuadro">
+        <h2>Registro de SMS</h2>
+        <ul id="lista-sms"></ul>
+      </div>
+
+      <!-- Ubicación dinámica -->
+      <div class="recuadro">
+        <h2>Ubicación</h2>
+        <iframe
+          id="mapa-ubicacion"
+          src="https://www.google.com/maps?q=-0.180653,-78.524948&hl=es&z=17&output=embed"
+          width="100%"
+          height="300"
+          style="border:0; border-radius: 10px;"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+    </div>
+
+    <button id="cerrar-sesion" class="btn btn-cerrar-sesion">Cerrar Sesión</button>
+  </div>
+
+  <!-- FIREBASE + SCRIPT -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc,
+      updateDoc,
+      arrayUnion,
+      collection,
+      getDocs
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDfC4Wd6SdXe-ZW-_IPRCLFNePuIq2ngas",
+      authDomain: "personasnovidentes.firebaseapp.com",
+      projectId: "personasnovidentes",
+      storageBucket: "personasnovidentes.appspot.com",
+      messagingSenderId: "749650104159",
+      appId: "1:749650104159:web:dd99016f337a79df8430ea"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const cedula = document.getElementById('cedula');
+    const nombre = document.getElementById('nombre');
+    const direccion = document.getElementById('direccion');
+    const telefono = document.getElementById('telefono');
+    const listaFamiliares = document.getElementById('lista-familiares');
+    const listaSMS = document.getElementById('lista-sms');
+    const mensajeExito = document.getElementById('mensaje-exito');
+    const mensajeError = document.getElementById('mensaje-error');
+    const btnCerrarSesion = document.getElementById('cerrar-sesion');
+    const iframeMapa = document.getElementById('mapa-ubicacion');
+
+    let currentUserUID = null;
+
+    onAuthStateChanged(auth, async user => {
+      if (user) {
+        currentUserUID = user.uid;
+        cargarFamiliares();
+        cargarMensajesSMS();
+      } else {
+        alert("No estás logueado. Redirigiendo...");
+        window.location.href = 'index.html';
+      }
+    });
+
+    async function cargarFamiliares() {
+      const docRef = doc(db, "Usuarios", currentUserUID);
+      const docSnap = await getDoc(docRef);
+      listaFamiliares.innerHTML = '';
+
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        const registros = data.Registro;
+        if (Array.isArray(registros)) {
+          registros.forEach(item => {
+            const li = document.createElement('li');
+            li.innerText = item.replace(/, /g, '\n');
+            listaFamiliares.appendChild(li);
+          });
+        }
+      }
+    }
+
+    async function cargarMensajesSMS() {
+      const smsRef = collection(db, "ubicacion");
+      listaSMS.innerHTML = '';
+
+      try {
+        const querySnapshot = await getDocs(smsRef);
+        querySnapshot.forEach(doc => {
+          const data = doc.data();
+          if (data.mensaje && data.latitud && data.longitud) {
+            const li = document.createElement('li');
+            li.innerText = data.mensaje;
+            li.setAttribute('data-lat', data.latitud);
+            li.setAttribute('data-lng', data.longitud);
+            li.addEventListener('click', () => mostrarUbicacion(data.latitud, data.longitud));
+            listaSMS.appendChild(li);
+          }
+        });
+      } catch (error) {
+        console.error("❌ Error al cargar mensajes:", error);
+      }
+    }
+
+    function mostrarUbicacion(lat, lng) {
+      const url = `https://www.google.com/maps?q=${lat},${lng}&hl=es&z=17&output=embed`;
+      iframeMapa.src = url;
+    }
+
+    document.getElementById('form-familiares').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      if (!currentUserUID) {
+        mensajeError.style.display = 'block';
+        mensajeExito.style.display = 'none';
+        mensajeError.textContent = "No hay usuario autenticado.";
+        return;
+      }
+
+      const registroTexto = `Cédula: ${cedula.value.trim()}, Nombre: ${nombre.value.trim()}, Celular: ${telefono.value.trim()}, Dirección: ${direccion.value.trim()}`;
+      const usuarioRef = doc(db, "Usuarios", currentUserUID);
+
+      try {
+        const docSnap = await getDoc(usuarioRef);
+        if (!docSnap.exists()) {
+          await setDoc(usuarioRef, { Registro: [registroTexto] });
+        } else {
+          await updateDoc(usuarioRef, {
+            Registro: arrayUnion(registroTexto)
+          });
+        }
+
+        mensajeExito.style.display = 'block';
+        mensajeError.style.display = 'none';
+        mensajeExito.textContent = "✅ Familiar guardado exitosamente.";
+        this.reset();
+        cargarFamiliares();
+        setTimeout(() => mensajeExito.style.display = 'none', 3000);
+      } catch (error) {
+        mensajeError.style.display = 'block';
+        mensajeExito.style.display = 'none';
+        mensajeError.textContent = "❌ Error al guardar: " + error.message;
+      }
+    });
+
+    btnCerrarSesion.addEventListener('click', () => {
+      signOut(auth)
+        .then(() => window.location.href = "index.html")
+        .catch(error => alert("Error al cerrar sesión: " + error.message));
+    });
+  </script>
+</body>
+</html>

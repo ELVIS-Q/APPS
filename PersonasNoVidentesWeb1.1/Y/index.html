@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login SOS</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .password-container {
+      position: relative;
+      width: 100%;
+      margin: 1rem auto;
+    }
+
+    .password-container input {
+      width: 100%;
+      padding-right: 40px;
+      padding-left: 10px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      box-sizing: border-box;
+    }
+
+    .toggle-password {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      width: 24px;
+      height: 24px;
+      opacity: 0.6;
+    }
+
+    .toggle-password:hover {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay">
+    <div class="login-container">
+      <img src="img/sos-icon.jpg" alt="SOS Icon" class="logo" />
+      <label for="usuario">USUARIO</label>
+      <input type="text" id="usuario" placeholder="Ingrese usuario (correo electrónico)" />
+      <label for="contrasena">CONTRASEÑA</label>
+      <div class="password-container">
+        <input type="password" id="contrasena" placeholder="Ingrese contraseña" />
+        <img src="https://cdn-icons-png.flaticon.com/512/709/709612.png" alt="Mostrar contraseña" id="togglePassword" class="toggle-password" />
+      </div>
+      <button class="btn">INGRESAR</button>
+      <button class="btn btn-secundario">CREAR CUENTA</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDfC4Wd6SdXe-ZW-_IPRCLFNePuIq2ngas",
+      authDomain: "personasnovidentes.firebaseapp.com",
+      projectId: "personasnovidentes",
+      storageBucket: "personasnovidentes.appspot.com",
+      messagingSenderId: "749650104159",
+      appId: "1:749650104159:web:dd99016f337a79df8430ea",
+      databaseURL: "https://personasnovidentes-default-rtdb.firebaseio.com"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const btnLogin = document.querySelector(".btn");
+    const btnCrear = document.querySelector(".btn-secundario");
+    const togglePassword = document.getElementById("togglePassword");
+    const inputContrasena = document.getElementById("contrasena");
+
+    togglePassword.addEventListener("click", () => {
+      const isPassword = inputContrasena.type === "password";
+      inputContrasena.type = isPassword ? "text" : "password";
+      togglePassword.src = isPassword
+        ? "https://cdn-icons-png.flaticon.com/512/159/159604.png"
+        : "https://cdn-icons-png.flaticon.com/512/709/709612.png";
+    });
+
+    btnLogin.addEventListener("click", () => {
+      const email = document.getElementById("usuario").value;
+      const password = inputContrasena.value;
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => {
+          alert("Inicio de sesión exitoso");
+          window.location.href = "familiares.html";
+        })
+        .catch((error) => {
+          alert("Error al iniciar sesión: " + error.message);
+        });
+    });
+
+    btnCrear.addEventListener("click", () => {
+      window.location.href = "registro.html";
+    });
+  </script>
+</body>
+</html>
